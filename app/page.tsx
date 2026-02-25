@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { LoginButton } from '@/components/auth/login-button';
 
 const features = [
   {
@@ -102,7 +103,7 @@ function LoadingScreen() {
 }
 
 export default function Home() {
-  const { ready, authenticated, login } = usePrivy();
+  const { ready, authenticated } = usePrivy();
 
   if (!ready) {
     return <LoadingScreen />;
@@ -144,13 +145,9 @@ export default function Home() {
                 <Link href="/dashboard">Go to Dashboard</Link>
               </Button>
             ) : (
-              <Button
-                size="lg"
-                className="h-12 px-8 text-base"
-                onClick={login}
-              >
+              <LoginButton size="lg" className="h-12 px-8 text-base">
                 Get Started
-              </Button>
+              </LoginButton>
             )}
           </div>
         </section>
