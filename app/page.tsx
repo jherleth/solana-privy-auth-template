@@ -1,11 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui/button';
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -15,7 +16,7 @@ import { LoginButton } from '@/components/auth/login-button';
 const features = [
   {
     title: 'Social Login',
-    description: 'Sign in with Google, GitHub, Twitter, or email',
+    description: 'Sign in with Google, GitHub, Discord, Twitter, or email',
     icon: (
       <svg
         className="h-6 w-6"
@@ -104,8 +105,15 @@ function LoadingScreen() {
 
 export default function Home() {
   const { ready, authenticated } = usePrivy();
+  const router = useRouter();
 
-  if (!ready) {
+  useEffect(() => {
+    if (ready && authenticated) {
+      router.replace('/dashboard');
+    }
+  }, [ready, authenticated, router]);
+
+  if (!ready || authenticated) {
     return <LoadingScreen />;
   }
 

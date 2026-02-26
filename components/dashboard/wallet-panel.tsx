@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWallets, useCreateWallet } from '@privy-io/react-auth/solana';
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import {
   Card,
   CardContent,
@@ -14,12 +15,38 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Copy, Check, Loader2 } from 'lucide-react';
 import { truncateAddress } from '@/lib/utils';
 
+const connection = new Connection('https://api.devnet.solana.com');
+
 export function WalletPanel() {
   const { ready: walletsReady, wallets } = useWallets();
   const { createWallet } = useCreateWallet();
   const [copied, setCopied] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [balance, setBalance] = useState<number | null>(null);
+  const [balanceLoading, setBalanceLoading] = useState(false);
+
+  const wallet = wallets[0];
+
+  useEffect(() => {
+    if (!wallet?.address) return;
+    let cancelled = false;
+    setBalanceLoading(true);
+    connection
+      .getBalance(new PublicKey(wallet.address))
+      .then((lamports) => {
+        if (!cancelled) setBalance(lamports / LAMPORTS_PER_SOL);
+      })
+      .catch(() => {
+        if (!cancelled) setBalance(null);
+      })
+      .finally(() => {
+        if (!cancelled) setBalanceLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [wallet?.address]);
 
   const handleCopy = async (address: string) => {
     try {
@@ -69,8 +96,6 @@ export function WalletPanel() {
     );
   }
 
-  const wallet = wallets[0];
-
   return (
     <Card>
       <CardHeader>
@@ -104,6 +129,20 @@ export function WalletPanel() {
                   <Copy className="size-3" />
                 )}
               </Button>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground">
+                Balance
+              </p>
+              <p className="font-mono text-sm">
+                {balanceLoading ? (
+                  <Skeleton className="inline-block h-4 w-20" />
+                ) : balance !== null ? (
+                  `${balance.toFixed(4)} SOL`
+                ) : (
+                  <span className="text-muted-foreground">Unavailable</span>
+                )}
+              </p>
             </div>
           </div>
         ) : (
