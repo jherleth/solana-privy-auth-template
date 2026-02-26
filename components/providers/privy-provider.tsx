@@ -159,7 +159,7 @@ export function PrivyAuthProvider({
         appearance: {
           walletChainType: 'solana-only',
         },
-        loginMethods: ['google', 'discord', 'twitter', 'email'],
+        loginMethods: ['google', 'github', 'twitter', 'email'],
         embeddedWallets: {
           solana: {
             createOnLogin: 'users-without-wallets',

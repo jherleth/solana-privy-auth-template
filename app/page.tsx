@@ -15,7 +15,7 @@ import { LoginButton } from '@/components/auth/login-button';
 const features = [
   {
     title: 'Social Login',
-    description: 'Sign in with Google, Discord, Twitter, or email',
+    description: 'Sign in with Google, GitHub, Twitter, or email',
     icon: (
       <svg
         className="h-6 w-6"

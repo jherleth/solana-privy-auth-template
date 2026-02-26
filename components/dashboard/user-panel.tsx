@@ -56,8 +56,8 @@ export function UserPanel() {
       value: `@${user.twitter.username}`,
     });
   }
-  if (user.discord?.username) {
-    linkedAccounts.push({ label: 'Discord', value: user.discord.username });
+  if (user.github?.username) {
+    linkedAccounts.push({ label: 'GitHub', value: user.github.username });
   }
 
   return (

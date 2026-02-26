@@ -14,7 +14,7 @@ export function AuthStatus() {
     user?.email?.address ??
     user?.google?.email ??
     (user?.twitter?.username ? `@${user.twitter.username}` : null) ??
-    user?.discord?.username ??
+    user?.github?.username ??
     'Logged in';
 
   return <Badge variant="secondary">{label}</Badge>;
